@@ -1,0 +1,19 @@
+#{extends 'main.html' /}
+#{set title:'Home' /}
+<script type="application/javascript">
+    var oAudio = document.getElementById('myaudio');
+    oAudio.onprogress = function() {
+        con("Downloading video");
+    };
+
+    function moveFwd() {
+        console.log(oAudio.currentTime + "\n Adding 5s");
+        oAudio.currentTime = oAudio.currentTime + 5;
+    }
+</script>
+
+<audio id="myaudio" controls="controls" preload="auto">
+    <source src="/audio/2" type="audio/mpeg">
+</audio>
+
+<button onclick="moveFwd()">Click</button>
