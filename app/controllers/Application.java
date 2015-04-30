@@ -12,6 +12,7 @@ import java.util.*;
 import models.*;
 
 public class Application extends Controller {
+    static String homeRoute = Play.configuration.getProperty("home.route");
 
     public static void index() {
         render();
@@ -22,7 +23,7 @@ public class Application extends Controller {
 //        notFoundIfNull(fileId);
 
         String fileName = "Bcee_Think_Twice.mp3";//name of the file
-        File underlyingFile = new File("/home/bohdaq/git/player/public/audios/Bcee_Think_Twice.mp3"); //load file
+        File underlyingFile = new File(homeRoute + "/public/audios/Bcee_Think_Twice.mp3"); //load file
 
         Http.Header rangeHeader = request.headers.get("range");
         if (rangeHeader != null) {
