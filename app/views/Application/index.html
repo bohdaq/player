@@ -1,19 +1,22 @@
 #{extends 'main.html' /}
 #{set title:'Home' /}
 <script type="application/javascript">
-    var oAudio = document.getElementById('myaudio');
-    oAudio.onprogress = function() {
-        con("Downloading video");
-    };
-
-    function moveFwd() {
-        console.log(oAudio.currentTime + "\n Adding 5s");
-        oAudio.currentTime = oAudio.currentTime + 5;
+    function playAudio(id){
+        var player = document.getElementById("myaudio");
+        player.src="/audio/" + id;
+        player.load();
+        player.play()
     }
 </script>
-haha
+
+#{form @Application.upload(audio), enctype:'multipart/form-data', method:'POST'}
+    <input type="file" name="audioFile">
+    <input type="submit" value="Submit">
+#{/form}
+
 <audio id="myaudio" controls="controls" preload="auto">
-    <source src="/audio/2" type="audio/mpeg">
 </audio>
 
-<button onclick="moveFwd()">Click</button>
+#{list items:audios, as:'audio'}
+    <li onclick="playAudio(${audio.id})">${audio.name}</li>
+#{/list}

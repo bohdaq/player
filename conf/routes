@@ -3,8 +3,9 @@
 # ~~~~
 
 # Home page
-GET     /                                      Application.index
+GET     /                                     Application.index
 GET     /audio/{fileId}                       Application.downloadFile
+POST    /upload                               Application.upload
 
 # Ignore favicon requests
 GET     /favicon.ico                            404

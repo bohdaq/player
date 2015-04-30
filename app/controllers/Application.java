@@ -1,37 +1,51 @@
 package controllers;
 
+import models.Audio;
 import play.*;
 import play.libs.MimeTypes;
 import play.mvc.*;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.*;
+import java.util.List;
 
-import models.*;
+import play.data.*;
 
 public class Application extends Controller {
-    static String homeRoute = Play.configuration.getProperty("home.route");
+    public static final String HOMEROUTE = Play.configuration.getProperty("home.route");
 
     public static void index() {
-        render();
+        List<Audio> audios = Audio.findAll();
+        render(audios);
+    }
+
+    public static void upload(Upload audioFile) throws Exception{
+        String filename = audioFile.getFileName();
+        Audio audioEntity = new Audio(filename);
+        audioEntity.save();
+
+        FileOutputStream out = new FileOutputStream(HOMEROUTE + "/public/audios/" + filename);
+        out.write(audioFile.asBytes());
+        out.close();
+        index();
     }
 
     public static void downloadFile(final Long fileId) throws IOException {
         response.setHeader("Accept-Ranges", "bytes");
 //        notFoundIfNull(fileId);
+        Audio audio = Audio.findById(fileId);
 
-        String fileName = "Bcee_Think_Twice.mp3";//name of the file
-        File underlyingFile = new File(homeRoute + "/public/audios/Bcee_Think_Twice.mp3"); //load file
+        File underlyingFile = new File(HOMEROUTE + "/public/audios/" + audio.name); //load file
 
         Http.Header rangeHeader = request.headers.get("range");
         if (rangeHeader != null) {
-            throw new PartialContent(underlyingFile, fileName);
+            throw new PartialContent(underlyingFile, audio.name);
         } else {
             renderBinary(new FileInputStream(underlyingFile),
-                    fileName, underlyingFile.length(),
-                    MimeTypes.getContentType(fileName), false);
+                    audio.name, underlyingFile.length(),
+                    MimeTypes.getContentType(audio.name), false);
         }
     }
 
