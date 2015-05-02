@@ -1,3 +1,4 @@
 player.*
 tmp
-public/audios/
+public/audios/*
+public/album-artwork/*

@@ -2,21 +2,57 @@
 #{set title:'Home' /}
 <script type="application/javascript">
     function playAudio(id){
-        var player = document.getElementById("myaudio");
-        player.src="/audio/" + id;
-        player.load();
-        player.play()
+        wavesurfer.pause();
+        wavesurfer.load("/audio/" + id);
+        wavesurfer.play();
     }
+    // Create an instance
+    var wavesurfer = Object.create(WaveSurfer);
+
+    // Init & load audio file
+    document.addEventListener('DOMContentLoaded', function () {
+        var options = {
+            container     : document.querySelector('#waveform'),
+            waveColor     : '#C0C0C0',
+            progressColor : '#808080',
+            cursorColor   : '#2F4F4F'
+        };
+
+        if (location.search.match('scroll')) {
+            options.minPxPerSec = 1;
+            options.scrollParent = true;
+        }
+
+        // Init
+        wavesurfer.init(options);
+        // Load audio from URL
+        wavesurfer.load('/audio/2');
+
+        // Regions
+        if (wavesurfer.enableDragSelection) {
+            wavesurfer.enableDragSelection({
+                color: 'rgba(0, 255, 0, 0.1)'
+            });
+        }
+    });
+
+    // Play at once when ready
+    // Won't work on iOS until you touch the page
+    wavesurfer.on('ready', function () {
+        wavesurfer.play();
+    });
 </script>
 
-#{form @Application.upload(audio), enctype:'multipart/form-data', method:'POST'}
-    <input type="file" name="audioFile">
-    <input type="submit" value="Submit">
-#{/form}
+<div id="waveform"></div>
+<div id="middleman">
+    <ul>
+    #{list items:audios, as:'audio'}
+        <li onclick="playAudio(${audio.id})">${audio.name}</li>
+    #{/list}
+    </ul>
 
-<audio id="myaudio" controls="controls" preload="auto">
-</audio>
-
-#{list items:audios, as:'audio'}
-    <li onclick="playAudio(${audio.id})">${audio.name}</li>
-#{/list}
+    #{form @Application.upload(audio), enctype:'multipart/form-data', method:'POST'}
+        <input type="file" name="audioFile">
+        <input type="submit" value="Submit">
+    #{/form}
+</div>
