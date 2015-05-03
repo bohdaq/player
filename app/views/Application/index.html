@@ -2,12 +2,12 @@
 #{set title:'Home' /}
 <script type="application/javascript">
     function playAudio(id){
-        wavesurfer.pause();
+        wavesurfer.currentAudioId = id;
         wavesurfer.load("/audio/" + id);
-        wavesurfer.play();
     }
     // Create an instance
     var wavesurfer = Object.create(WaveSurfer);
+    wavesurfer.lengthOfPlaylist = ${audios.size()+1}
 
     // Init & load audio file
     document.addEventListener('DOMContentLoaded', function () {
@@ -34,6 +34,18 @@
                 color: 'rgba(0, 255, 0, 0.1)'
             });
         }
+
+        wavesurfer.on('finish', function () {
+            console.log('Finished playing');
+            if(wavesurfer.currentAudioId == wavesurfer.lengthOfPlaylist){
+                wavesurfer.currentAudioId = 1;
+            } else {
+                wavesurfer.currentAudioId = wavesurfer.currentAudioId +1;
+            }
+            console.log('id: ' + wavesurfer.currentAudioId);
+
+            wavesurfer.load('/audio/' + wavesurfer.currentAudioId);
+        });
     });
 
     // Play at once when ready
