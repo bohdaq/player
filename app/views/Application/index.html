@@ -1,65 +1,35 @@
 #{extends 'main.html' /}
 #{set title:'Home' /}
 <script type="application/javascript">
-    function playAudio(id){
-        wavesurfer.currentAudioId = id;
-        wavesurfer.load("/audio/" + id);
-    }
-    // Create an instance
-    var wavesurfer = Object.create(WaveSurfer);
-    wavesurfer.lengthOfPlaylist = ${audios.size()+1}
-
-    // Init & load audio file
-    document.addEventListener('DOMContentLoaded', function () {
-        var options = {
-            container     : document.querySelector('#waveform'),
-            waveColor     : '#C0C0C0',
-            progressColor : '#808080',
-            cursorColor   : '#2F4F4F'
-        };
-
-        if (location.search.match('scroll')) {
-            options.minPxPerSec = 1;
-            options.scrollParent = true;
-        }
-
-        // Init
-        wavesurfer.init(options);
-        // Load audio from URL
-        wavesurfer.load('/audio/2');
-
-        // Regions
-        if (wavesurfer.enableDragSelection) {
-            wavesurfer.enableDragSelection({
-                color: 'rgba(0, 255, 0, 0.1)'
-            });
-        }
-
-        wavesurfer.on('finish', function () {
-            console.log('Finished playing');
-            if(wavesurfer.currentAudioId == wavesurfer.lengthOfPlaylist){
-                wavesurfer.currentAudioId = 1;
-            } else {
-                wavesurfer.currentAudioId = wavesurfer.currentAudioId +1;
-            }
-            console.log('id: ' + wavesurfer.currentAudioId);
-
-            wavesurfer.load('/audio/' + wavesurfer.currentAudioId);
+    var highlight = "highlight";
+    $( document ).ready(function() {
+        $('.audioTrack').click(function(){
+            console.log("click@")
+            $('.highlight').removeClass('highlight');
+            $(this).addClass('highlight');
+            playAudio(this.id);
         });
     });
 
-    // Play at once when ready
-    // Won't work on iOS until you touch the page
-    wavesurfer.on('ready', function () {
-        wavesurfer.play();
-    });
+
+    function playAudio(id){
+        document.ownVibe = document.getElementById("ownVibe");
+        document.ownVibe.src = "/audio/" + id;
+        document.ownVibe.play();
+
+        $(".audioTrack").removeClass(highlight);
+        $(event.target).addClass('highlight');
+    }
+
 </script>
 
-<div id="waveform"></div>
 <div id="middleman">
+    <audio controls preload id="ownVibe">
+        <source src="/audio/1">
+    </audio>
     <ul>
     #{list items:audios, as:'audio'}
-        <li onclick="playAudio(${audio.id})">${audio.name}</li>
+        <li class="audioTrack" id="${audio.id}">${audio.name}</li>
     #{/list}
     </ul>
 

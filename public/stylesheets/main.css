@@ -2,3 +2,10 @@
     display: table;
     margin: 0 auto;
 }
+#ownVibe {
+    width: 100%;
+}
+
+.highlight {
+    font-weight: bold;
+}
