@@ -49,16 +49,27 @@ public class Application extends Controller {
 
     public static void index() {
         Http.Cookie userLoggedInCookie = request.cookies.get("token");
-        if(userLoggedInCookie == null)
+        if(userLoggedInCookie == null) {
             loginForm();
+        }
 
-        List<Audio> audios = Audio.findAll();
+        User user = User.find("byToken", userLoggedInCookie.value).first();
+        List<Audio> audios = Audio.find("byUser", user).fetch();
         render(audios);
     }
 
+    public static void logout() {
+        response.removeCookie("token");
+        index();
+    }
+
     public static void upload(Upload audioFile) throws Exception{
+        Http.Cookie userLoggedInCookie = request.cookies.get("token");
+        User user = User.find("byToken", userLoggedInCookie.value).first();
+
         String filename = audioFile.getFileName();
         Audio audioEntity = new Audio(filename);
+        audioEntity.user = user;
         audioEntity.save();
 
         FileOutputStream out = new FileOutputStream(HOMEROUTE + "/public/audios/" + filename);
