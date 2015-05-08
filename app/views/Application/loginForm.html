@@ -1,0 +1,36 @@
+#{extends 'main.html' /}
+#{set title:'Home' /}
+<script type="application/javascript">
+    jQuery( document ).ready(function( $ ) {
+        $( "#doLogin" ).click(function() {
+            $.post( "/application/login", $( "#loginForm" ).serialize())
+                    .done(function( data ) {
+                        if(data.token){
+//                            debugger;
+                            setCookie('token', data.token);
+                            window.location.replace('/');
+                        }
+                    });
+        });
+    });
+    function setCookie(key, value) {
+        var expires = new Date();
+        expires.setTime(expires.getTime() + (1 * 24 * 60 * 60 * 1000));
+        document.cookie = key + '=' + value + ';expires=' + expires.toUTCString();
+    }
+
+    function getCookie(key) {
+        var keyValue = document.cookie.match('(^|;) ?' + key + '=([^;]*)(;|$)');
+        return keyValue ? keyValue[2] : null;
+    }
+
+</script>
+
+<div>
+    <form action="/application/login" method="post" accept-charset="utf-8" enctype="multipart/x-www-form-urlencoded" id="loginForm">
+        <input type="email" name="email">
+        <input type="password" name="password">
+        <input id="doLogin" type="button" value="Submit">
+    </form>
+    <a href="/application/registrationForm">Register</a>
+</div>

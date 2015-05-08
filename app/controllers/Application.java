@@ -4,6 +4,7 @@ import com.mpatric.mp3agic.ID3v1;
 import com.mpatric.mp3agic.ID3v2;
 import com.mpatric.mp3agic.Mp3File;
 import models.Audio;
+import models.User;
 import play.*;
 import play.libs.MimeTypes;
 import play.mvc.*;
@@ -16,7 +17,41 @@ import play.data.*;
 public class Application extends Controller {
     public static final String HOMEROUTE = Play.configuration.getProperty("home.route");
 
+    public static void loginForm(){
+        render();
+    }
+
+    public static void registrationForm(){
+        render();
+    }
+
+
+    public static void login(String email, String password){
+        User user = User.find("byEmailAndPassword", email, password).first();
+        if(user == null){
+            renderJSON("{ \"status\": \"User not found\"}");
+        } else {
+            user.token = System.currentTimeMillis() + email;
+            response.setCookie("token", user.token);
+            user.save();
+            renderJSON("{ \"token\": \"" + user.token + "\"}");
+        }
+    }
+
+    public static void register(String email, String password, String xpassword){
+        System.out.println(email + password + xpassword);
+        User user = new User(email, password);
+        user.token = System.currentTimeMillis() + email;
+        user.save();
+        response.setCookie("token", user.token);
+        renderJSON("{ \"status\": \"User registered\", \"token\": \"" + user.token + "\"}");
+    }
+
     public static void index() {
+        Http.Cookie userLoggedInCookie = request.cookies.get("token");
+        if(userLoggedInCookie == null)
+            loginForm();
+
         List<Audio> audios = Audio.findAll();
         render(audios);
     }
