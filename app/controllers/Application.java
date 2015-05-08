@@ -49,7 +49,7 @@ public class Application extends Controller {
 
     public static void index() {
         Http.Cookie userLoggedInCookie = request.cookies.get("token");
-        if(userLoggedInCookie == null) {
+        if(userLoggedInCookie == null || User.find("byToken", userLoggedInCookie.value).first() == null) {
             loginForm();
         }
 
