@@ -9,17 +9,28 @@
             $(this).addClass('highlight');
             playAudio(this.id);
         });
+
+        $("#ownVibe").bind("ended", function(){
+            nextAudio();
+        });
+        function playAudio(id){
+            document.ownVibe = document.getElementById("ownVibe");
+            document.ownVibe.idAudio = id;
+            document.ownVibe.src = "/audio/" + id;
+            document.ownVibe.play();
+
+            $(".audioTrack").removeClass(highlight);
+            $(event.target).addClass('highlight');
+        }
+        function nextAudio(){
+            document.ownVibe.idAudio = parseInt(document.ownVibe.idAudio)+1;
+            document.ownVibe.src = "/audio/" + document.ownVibe.idAudio;
+
+            $(".audioTrack").removeClass(highlight);
+            $("#" + document.ownVibe.idAudio).addClass('highlight');
+            document.ownVibe.play();
+        }
     });
-
-
-    function playAudio(id){
-        document.ownVibe = document.getElementById("ownVibe");
-        document.ownVibe.src = "/audio/" + id;
-        document.ownVibe.play();
-
-        $(".audioTrack").removeClass(highlight);
-        $(event.target).addClass('highlight');
-    }
 
 </script>
 
