@@ -2,7 +2,8 @@
 #{set title:'Home' /}
 <script type="application/javascript">
     jQuery( document ).ready(function( $ ) {
-        $( "#doLogin" ).click(function() {
+        $( "#doLogin" ).click(function(event) {
+            event.preventDefault();
             $.post( "/application/login", $( "#loginForm" ).serialize())
                     .done(function( data ) {
                         if(data.token){
@@ -25,12 +26,29 @@
     }
 
 </script>
-
-<div>
-    <form action="/application/login" method="post" accept-charset="utf-8" enctype="multipart/x-www-form-urlencoded" id="loginForm">
-        <input type="email" name="email">
-        <input type="password" name="password">
-        <input id="doLogin" type="button" value="Submit">
-    </form>
-    <a href="/application/registrationForm">Register</a>
+<div class="large-3 large-centered columns">
+    <div class="login-box">
+        <div class="row">
+            <div class="large-12 columns">
+                <form action="/application/login" method="post" accept-charset="utf-8" enctype="multipart/x-www-form-urlencoded" id="loginForm">
+                    <div class="row">
+                        <div class="large-12 columns">
+                            <input type="email" name="email" placeholder="Email" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="large-12 columns">
+                            <input type="password" name="password" placeholder="Password" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="large-12 large-centered columns">
+                            <input id="doLogin" type="submit" class="button expand" value="Log In"/>
+                        </div>
+                    </div>
+                    <a href="/application/registrationForm">Register</a>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>

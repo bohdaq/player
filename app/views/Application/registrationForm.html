@@ -2,7 +2,8 @@
 #{set title:'Home' /}
 <script type="application/javascript">
     jQuery( document ).ready(function( $ ) {
-        $( "#doRegister" ).click(function() {
+        $( "#doRegister" ).click(function(event) {
+            event.preventDefault();
             $.post( "/application/register", $( "#registerForm" ).serialize())
                     .done(function( data ) {
                         if(data.token){
@@ -27,11 +28,33 @@
 
 </script>
 
-<div>
-    <form action="/application/register" method="post" accept-charset="utf-8" enctype="multipart/x-www-form-urlencoded" id="registerForm">
-        <input type="email" name="email">
-        <input type="password" name="password">
-        <input type="password" name="xpassword">
-        <input id="doRegister" type="button" value="Submit">
-    </form>
+<div class="large-3 large-centered columns">
+    <div class="login-box">
+        <div class="row">
+            <div class="large-12 columns">
+                <form action="/application/register" method="post" accept-charset="utf-8" enctype="multipart/x-www-form-urlencoded" id="registerForm">
+                    <div class="row">
+                        <div class="large-12 columns">
+                            <input type="email" name="email" placeholder="Email" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="large-12 columns">
+                            <input type="password" name="password" placeholder="Password" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="large-12 columns">
+                            <input type="password" name="xpassword" placeholder="Repeat Password" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="large-12 large-centered columns">
+                            <input id="doRegister" type="submit" class="button expand" value="Register"/>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
