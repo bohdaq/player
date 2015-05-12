@@ -9,7 +9,7 @@
                         if(data.token){
                             setCookie('token', data.token);
                             window.location.replace('/');
-                        } else if (data.status == "Password missmatch") {
+                        } else if (data.status == "Password missmatch" || data.status == "Invalid email") {
                             alert(data.status);
                         }
                     });

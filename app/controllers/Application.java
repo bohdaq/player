@@ -39,15 +39,23 @@ public class Application extends Controller {
     }
 
     public static void register(String email, String password, String xpassword){
-        if(password.equals(xpassword)){
-            User user = new User(email, password);
-            user.token = System.currentTimeMillis() + email;
-            user.save();
-            response.setCookie("token", user.token);
-            renderJSON("{ \"status\": \"User registered\", \"token\": \"" + user.token + "\"}");
+      //  ^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$
+
+        if(email.contains("@") && email.contains(".")) {
+
+            if(password.equals(xpassword)){
+                User user = new User(email, password);
+                user.token = System.currentTimeMillis() + email;
+                user.save();
+                response.setCookie("token", user.token);
+                renderJSON("{ \"status\": \"User registered\", \"token\": \"" + user.token + "\"}");
+            }else{
+                renderJSON("{ \"status\": \"Password missmatch\"}");
+            }
         }else{
-            renderJSON("{ \"status\": \"Password missmatch\"}");
+            renderJSON("{ \"status\": \"Invalid email\"}");
         }
+
     }
 
     public static void index() {
