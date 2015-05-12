@@ -7,7 +7,6 @@
             $.post( "/application/login", $( "#loginForm" ).serialize())
                     .done(function( data ) {
                         if(data.token){
-//                            debugger;
                             setCookie('token', data.token);
                             window.location.replace('/');
                         }

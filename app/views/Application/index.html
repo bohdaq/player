@@ -40,7 +40,7 @@
     </audio>
     <ul>
     #{list items:audios, as:'audio'}
-        <li class="audioTrack" id="${audio.id}">${audio.name}</li>
+        <li class="audioTrack" id="${audio.id}">#{if audio.title != null }${audio.artist} – ${audio.title}#{/if}#{else}${audio.name}#{/else}</li>
     #{/list}
     </ul>
 

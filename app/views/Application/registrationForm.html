@@ -9,6 +9,8 @@
                         if(data.token){
                             setCookie('token', data.token);
                             window.location.replace('/');
+                        } else if (data.status == "Password missmatch") {
+                            alert(data.status);
                         }
                     });
         });
