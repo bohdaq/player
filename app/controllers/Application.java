@@ -59,6 +59,16 @@ public class Application extends Controller {
 
     }
 
+    public static void remove(Long audioId){
+        Audio audio = Audio.findById(audioId);
+        File audioFileFromFs = new File(HOMEROUTE + "/public/audios/" + audio.name);
+        if(audioFileFromFs.delete()){
+            audio.delete();
+            renderJSON("{ \"status\": \"Deleted\"}");
+        }
+        renderJSON("{ \"status\": \"Error\"}");
+    }
+
     public static void index() {
         Http.Cookie userLoggedInCookie = request.cookies.get("token");
         try {

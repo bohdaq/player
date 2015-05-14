@@ -19,8 +19,26 @@ body {
 
 li {
     cursor: pointer;
+    list-style-type: none;
 }
 
 .highlight {
     font-weight: bold;
+}
+
+.box2 {
+    display: inline-block;
+    width: 90%;
+    height: 30px;
+}
+
+.box1 {
+    width: 10% !important;
+}
+
+.truncate {
+    width: 90%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }

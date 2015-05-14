@@ -31,6 +31,16 @@
             document.ownVibe.play();
         }
     });
+    function removeAudio(){
+        var audioIdToRemove = event.target.parentElement.firstChild.id;
+        var url = "/audio/remove/" + audioIdToRemove;
+        var elemToDelete = event.target.parentElement;
+        $.post(url).done(function( data ) {
+                    if(data.status == "Deleted"){
+                        elemToDelete.remove();
+                    }
+                });
+    }
 
 </script>
 
@@ -39,7 +49,7 @@
     </audio>
     <ul>
     #{list items:audios, as:'audio'}
-        <li class="audioTrack" id="${audio.id}">#{if audio.title != null }${audio.artist} – ${audio.title}#{/if}#{else}${audio.name}#{/else}</li>
+        <li><div id="${audio.id}" class="audioTrack box2 truncate">#{if audio.title != null }${audio.artist} – ${audio.title}#{/if}#{else}${audio.name}#{/else}</div><div onclick="removeAudio();" class="box2 box1">×</div></li>
     #{/list}
     </ul>
 
