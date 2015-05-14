@@ -23,7 +23,7 @@
             $(event.target).addClass('highlight');
         }
         function nextAudio(){
-            document.ownVibe.idAudio = parseInt(document.ownVibe.idAudio)+1;
+            document.ownVibe.idAudio = $(document.getElementById(document.ownVibe.idAudio)).next()[0].id;
             document.ownVibe.src = "/audio/" + document.ownVibe.idAudio;
 
             $(".audioTrack").removeClass(highlight);

@@ -6,6 +6,7 @@ import com.mpatric.mp3agic.Mp3File;
 import models.Audio;
 import models.User;
 import play.*;
+import play.db.jpa.JPABase;
 import play.libs.MimeTypes;
 import play.mvc.*;
 
@@ -60,7 +61,11 @@ public class Application extends Controller {
 
     public static void index() {
         Http.Cookie userLoggedInCookie = request.cookies.get("token");
-        if(userLoggedInCookie == null || User.find("byToken", userLoggedInCookie.value).first() == null) {
+        try {
+            if(userLoggedInCookie == null || User.find("byToken", userLoggedInCookie.value).first() == null) {
+                loginForm();
+            }
+        } catch (JPABase.JPAQueryException ex){
             loginForm();
         }
 
