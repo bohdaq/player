@@ -41,12 +41,18 @@
                     }
                 });
     }
+    function shuffle(){
+        var ul = document.querySelector('ul');
+        for (var i = ul.children.length; i >= 0; i--) {
+            ul.appendChild(ul.children[Math.random() * i | 0]);
+        }
+    }
 
 </script>
 
 <div id="middleman">
-    <audio controls preload id="ownVibe">
-    </audio>
+    <audio controls preload id="ownVibe"></audio>
+    <a href="#" class="button" onclick="shuffle()">Shuffle</a>
     <ul>
     #{list items:audios, as:'audio'}
         <li><div id="${audio.id}" class="audioTrack box2 truncate">#{if audio.title != null }${audio.artist} – ${audio.title}#{/if}#{else}${audio.name}#{/else}</div><div onclick="removeAudio();" class="box2 box1">×</div></li>
