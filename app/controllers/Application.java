@@ -89,61 +89,66 @@ public class Application extends Controller {
         index();
     }
 
-    public static void upload(Upload audioFile) throws Exception{
+    public static void upload(Upload[] audioFiles) throws Exception{
         Http.Cookie userLoggedInCookie = request.cookies.get("token");
         User user = User.find("byToken", userLoggedInCookie.value).first();
 
-        String filename = audioFile.getFileName();
-        Audio audioEntity = new Audio(filename);
-        audioEntity.user = user;
+        for(Upload audioFile : audioFiles){
 
-        FileOutputStream out = new FileOutputStream(HOMEROUTE + "/public/audios/" + filename);
-        out.write(audioFile.asBytes());
-        out.close();
 
-        Mp3File mp3file = new Mp3File(HOMEROUTE + "/public/audios/" + filename);
-        audioEntity.length = mp3file.getLengthInSeconds();
-        audioEntity.bitrate = mp3file.getBitrate();
-        audioEntity.sampleRate = mp3file.getSampleRate();
-        audioEntity.hasId3v1Tag = mp3file.hasId3v1Tag();
-        audioEntity.hasId3v2Tag = mp3file.hasId3v2Tag();
-        audioEntity.hasCustomTag = mp3file.hasCustomTag();
+            String filename = audioFile.getFileName();
+            Audio audioEntity = new Audio(filename);
+            audioEntity.user = user;
 
-        if (mp3file.hasId3v1Tag()) {
-            ID3v1 id3v1Tag = mp3file.getId3v1Tag();
-            System.out.println(id3v1Tag.getArtist());
-            audioEntity.artist = id3v1Tag.getArtist();
-            audioEntity.title = id3v1Tag.getTitle();
-            audioEntity.album = id3v1Tag.getAlbum();
-            audioEntity.year = id3v1Tag.getYear();
-            audioEntity.genre = id3v1Tag.getGenre();
-            audioEntity.genreDescription = id3v1Tag.getGenreDescription();
-        }
-        if (mp3file.hasId3v2Tag()) {
-            ID3v2 id3v2Tag = mp3file.getId3v2Tag();
-            System.out.println(id3v2Tag.getArtist());
-            audioEntity.artist = id3v2Tag.getArtist();
-            audioEntity.title = id3v2Tag.getTitle();
-            audioEntity.album = id3v2Tag.getAlbum();
-            audioEntity.year = id3v2Tag.getYear();
-            audioEntity.genre = id3v2Tag.getGenre();
-            audioEntity.genreDescription = id3v2Tag.getGenreDescription();
-            audioEntity.encoder = id3v2Tag.getEncoder();
-        }
-        audioEntity.save();
-        if (mp3file.hasId3v2Tag()) {
-            ID3v2 id3v2Tag = mp3file.getId3v2Tag();
-            byte[] imageData = id3v2Tag.getAlbumImage();
-            if (imageData != null) {
-                String mimeType = id3v2Tag.getAlbumImageMimeType();
-                System.out.println("Mime type: " + mimeType);
-                // Write image to file - can determine appropriate file extension from the mime type
-                RandomAccessFile file = new RandomAccessFile(HOMEROUTE + "/public/album-artwork/" + audioEntity.getId()+".jpg", "rw");
-                file.write(imageData);
-                file.close();
+            FileOutputStream out = new FileOutputStream(HOMEROUTE + "/public/audios/" + filename);
+            out.write(audioFile.asBytes());
+            out.close();
+
+
+            Mp3File mp3file = new Mp3File(HOMEROUTE + "/public/audios/" + filename);
+            audioEntity.length = mp3file.getLengthInSeconds();
+            audioEntity.bitrate = mp3file.getBitrate();
+            audioEntity.sampleRate = mp3file.getSampleRate();
+            audioEntity.hasId3v1Tag = mp3file.hasId3v1Tag();
+            audioEntity.hasId3v2Tag = mp3file.hasId3v2Tag();
+            audioEntity.hasCustomTag = mp3file.hasCustomTag();
+
+            if (mp3file.hasId3v1Tag()) {
+                ID3v1 id3v1Tag = mp3file.getId3v1Tag();
+                System.out.println(id3v1Tag.getArtist());
+                audioEntity.artist = id3v1Tag.getArtist();
+                audioEntity.title = id3v1Tag.getTitle();
+                audioEntity.album = id3v1Tag.getAlbum();
+                audioEntity.year = id3v1Tag.getYear();
+                audioEntity.genre = id3v1Tag.getGenre();
+                audioEntity.genreDescription = id3v1Tag.getGenreDescription();
             }
+            if (mp3file.hasId3v2Tag()) {
+                ID3v2 id3v2Tag = mp3file.getId3v2Tag();
+                System.out.println(id3v2Tag.getArtist());
+                audioEntity.artist = id3v2Tag.getArtist();
+                audioEntity.title = id3v2Tag.getTitle();
+                audioEntity.album = id3v2Tag.getAlbum();
+                audioEntity.year = id3v2Tag.getYear();
+                audioEntity.genre = id3v2Tag.getGenre();
+                audioEntity.genreDescription = id3v2Tag.getGenreDescription();
+                audioEntity.encoder = id3v2Tag.getEncoder();
+            }
+            audioEntity.save();
+            if (mp3file.hasId3v2Tag()) {
+                ID3v2 id3v2Tag = mp3file.getId3v2Tag();
+                byte[] imageData = id3v2Tag.getAlbumImage();
+                if (imageData != null) {
+                    String mimeType = id3v2Tag.getAlbumImageMimeType();
+                    System.out.println("Mime type: " + mimeType);
+                    // Write image to file - can determine appropriate file extension from the mime type
+                    RandomAccessFile file = new RandomAccessFile(HOMEROUTE + "/public/album-artwork/" + audioEntity.getId()+".jpg", "rw");
+                    file.write(imageData);
+                    file.close();
+                }
+            }
+            audioEntity.save();
         }
-        audioEntity.save();
         index();
     }
 

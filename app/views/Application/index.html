@@ -60,7 +60,7 @@
     </ul>
 
     #{form @Application.upload(audio), enctype:'multipart/form-data', method:'POST'}
-        <input type="file" name="audioFile">
+        <input type="file" name="audioFiles" multiple="">
         <input type="submit" value="Submit">
     #{/form}
 
