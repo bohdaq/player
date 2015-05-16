@@ -1,6 +1,13 @@
 #{extends 'main.html' /}
 #{set title:'Home' /}
 <script type="application/javascript">
+    var music; // id for audio element
+    var pButton; // play button
+    var playhead; // playhead
+    var timeline; // timeline
+    // timeline width adjusted for playhead
+    var timelineWidth;
+
     var highlight = "highlight";
     $( document ).ready(function() {
         $('.audioTrack').click(function(){
@@ -10,11 +17,11 @@
             playAudio(this.id);
         });
 
-        $("#ownVibe").bind("ended", function(){
+        $("#music").bind("ended", function(){
             nextAudio();
         });
         function playAudio(id){
-            document.ownVibe = document.getElementById("ownVibe");
+            document.ownVibe = document.getElementById("music");
             document.ownVibe.idAudio = id;
             document.ownVibe.src = "/audio/" + id;
             document.ownVibe.play();
@@ -23,13 +30,49 @@
             $(event.target).addClass('highlight');
         }
         function nextAudio(){
-            document.ownVibe.idAudio = $(document.getElementById(document.ownVibe.idAudio)).next()[0].id;
+            var idOfNextAudio = $("#" + document.ownVibe.idAudio).parent().next().children()[0].id;
+            document.ownVibe.idAudio = idOfNextAudio;
             document.ownVibe.src = "/audio/" + document.ownVibe.idAudio;
 
             $(".audioTrack").removeClass(highlight);
             $("#" + document.ownVibe.idAudio).addClass('highlight');
             document.ownVibe.play();
         }
+
+        //--------------------
+        music = document.getElementById('music'); // id for audio element
+        pButton = document.getElementById('pButton'); // play button
+
+        playhead = document.getElementById('playhead'); // playhead
+
+        timeline = document.getElementById('timeline'); // timeline
+        // timeline width adjusted for playhead
+        timelineWidth = timeline.offsetWidth - playhead.offsetWidth;
+
+        // timeupdate event listener
+        music.addEventListener("timeupdate", timeUpdate, false);
+
+        //Makes timeline clickable
+        timeline.addEventListener("click", function (event) {
+            moveplayhead(event);
+            music.currentTime = duration * clickPercent(event);
+        }, false);
+
+        // returns click as decimal (.77) of the total timelineWidth
+        function clickPercent(e) {
+            return (e.pageX - timeline.offsetLeft) / timelineWidth;
+        }
+
+        // Makes playhead draggable
+        playhead.addEventListener('mousedown', mouseDown, false);
+        window.addEventListener('mouseup', mouseUp, false);
+
+
+
+        // Gets audio file duration
+        music.addEventListener("canplaythrough", function () {
+            duration = music.duration;
+        }, false);
     });
     function removeAudio(){
         var audioIdToRemove = event.target.parentElement.firstChild.id;
@@ -46,13 +89,86 @@
         for (var i = ul.children.length; i >= 0; i--) {
             ul.appendChild(ul.children[Math.random() * i | 0]);
         }
+        ul.children[0].children[0].click();
+    }
+
+    //------
+    // Boolean value so that mouse is moved on mouseUp only when the playhead is released
+    var onplayhead = false;
+    // mouseDown EventListener
+    function mouseDown() {
+        onplayhead = true;
+        window.addEventListener('mousemove', moveplayhead, true);
+        music.removeEventListener('timeupdate', timeUpdate, false);
+    }
+    // mouseUp EventListener
+    // getting input from all mouse clicks
+    function mouseUp(e) {
+        if (onplayhead == true) {
+            moveplayhead(e);
+            window.removeEventListener('mousemove', moveplayhead, true);
+            // change current time
+            music.currentTime = duration * clickPercent(e);
+            music.addEventListener('timeupdate', timeUpdate, false);
+        }
+        onplayhead = false;
+    }
+    // mousemove EventListener
+    // Moves playhead as user drags
+    function moveplayhead(e) {
+        var newMargLeft = e.pageX - timeline.offsetLeft;
+        if (newMargLeft >= 0 && newMargLeft <= timelineWidth) {
+            playhead.style.marginLeft = newMargLeft + "px";
+        }
+        if (newMargLeft < 0) {
+            playhead.style.marginLeft = "0px";
+        }
+        if (newMargLeft > timelineWidth) {
+            playhead.style.marginLeft = timelineWidth + "px";
+        }
+    }
+
+    // timeUpdate
+    // Synchronizes playhead position with current point in audio
+    function timeUpdate() {
+        var playPercent = timelineWidth * (music.currentTime / duration);
+        playhead.style.marginLeft = playPercent + "px";
+        if (music.currentTime == duration) {
+            pButton.className = "";
+            pButton.className = "play";
+        }
+    }
+
+    //Play and Pause
+    function play() {
+        // start music
+        if (music.paused) {
+            music.play();
+            // remove play, add pause
+            pButton.className = "";
+            pButton.className = "pause";
+        } else { // pause music
+            music.pause();
+            // remove pause, add play
+            pButton.className = "";
+            pButton.className = "play";
+        }
     }
 
 </script>
 
 <div id="middleman">
-    <audio controls preload id="ownVibe"></audio>
-    <a href="#" class="button" onclick="shuffle()">Shuffle</a>
+    <audio id="music" preload="true">
+        <source src="http://www.alexkatz.me/codepen/music/interlude.mp3">
+    </audio>
+    <div id="audioplayer">
+        <div id="pButton" class="play" onclick="play()"></div>
+        <div id="pButton" class="shuffle" onclick="shuffle()"></div>
+        <div id="timeline">
+            <div id="playhead"></div>
+        </div>
+    </div>
+
     <ul>
     #{list items:audios, as:'audio'}
         <li><div id="${audio.id}" class="audioTrack box2 truncate">#{if audio.title != null }${audio.artist} – ${audio.title}#{/if}#{else}${audio.name}#{/else}</div><div onclick="removeAudio();" class="box2 box1">×</div></li>
