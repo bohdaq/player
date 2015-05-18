@@ -1,5 +1,5 @@
 #{extends 'main.html' /}
-#{set title:'Home' /}
+#{set title:'Player' /}
 <script type="application/javascript">
     var music; // id for audio element
     var pButton; // play button
@@ -157,28 +157,39 @@
 
 </script>
 
-<div id="middleman">
-    <audio id="music" preload="true">
-        <source src="http://www.alexkatz.me/codepen/music/interlude.mp3">
-    </audio>
-    <div id="audioplayer">
+<audio id="music" preload="true">
+    <source src="http://www.alexkatz.me/codepen/music/interlude.mp3">
+</audio>
+
+<div id="audioplayer" class="contain-player">
+    <div class="left-top-player">
         <div id="pButton" class="play" onclick="play()"></div>
+    </div>
+    <div class="left-top-player">
         <div id="pButton" class="shuffle" onclick="shuffle()"></div>
+    </div>
+    <div class="middle-top-player">
         <div id="timeline">
             <div id="playhead"></div>
         </div>
     </div>
-
-    <ul>
-    #{list items:audios, as:'audio'}
-        <li><div id="${audio.id}" class="audioTrack box2 truncate">#{if audio.title != null }${audio.artist} – ${audio.title}#{/if}#{else}${audio.name}#{/else}</div><div onclick="removeAudio();" class="box2 box1">×</div></li>
-    #{/list}
-    </ul>
-
-    #{form @Application.upload(audio), enctype:'multipart/form-data', method:'POST'}
-        <input type="file" name="audioFiles" multiple="">
-        <input type="submit" value="Submit">
-    #{/form}
-
-    <a href="@{Application.logout()}">Logout</a>
+    <div class="right-top-player">
+        <div id="pButton" class="playlist" onclick="showPlaylists()"></div>
+    </div>
+    <div class="right-top-player">
+        <div id="pButton" class="profile"></div>
+    </div>
 </div>
+
+<ul id="listOfAudios">
+#{list items:audios, as:'audio'}
+    <li><div id="${audio.id}" class="audioTrack box2 truncate">#{if audio.title != null }${audio.artist} – ${audio.title}#{/if}#{else}${audio.name}#{/else}</div><div onclick="removeAudio();" class="box2 box1">×</div></li>
+#{/list}
+</ul>
+
+#{form @Application.upload(audio), enctype:'multipart/form-data', method:'POST'}
+    <input type="file" name="audioFiles" multiple="">
+    <input type="submit" value="Submit">
+#{/form}
+
+<a href="@{Application.logout()}">Logout</a>
