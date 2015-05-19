@@ -11,9 +11,9 @@
     var highlight = "highlight";
     $( document ).ready(function() {
         window.viewRouter = new ViewRouter();
+        window.apiCaller = new ApiCaller();
 
         $('.audioTrack').click(function(){
-            console.log("click@")
             $('.highlight').removeClass('highlight');
             $(this).addClass('highlight');
             playAudio(this.id);
@@ -78,13 +78,16 @@
     });
     function removeAudio(){
         var audioIdToRemove = event.target.parentElement.firstChild.id;
-        var url = "/audio/remove/" + audioIdToRemove;
         var elemToDelete = event.target.parentElement;
-        $.post(url).done(function( data ) {
-                    if(data.status == "Deleted"){
-                        elemToDelete.remove();
-                    }
-                });
+
+        var url = "/audio/remove/" + audioIdToRemove;
+        var doneCallback = function(data){
+            if(data.status == "Deleted"){
+                elemToDelete.remove();
+            }
+        }
+
+        apiCaller.deleteAudio(url, doneCallback);
     }
     function shuffle(){
         var ul = document.querySelector('ul');
@@ -193,7 +196,7 @@
     </ul>
 
     <div id="playlists" style="display: none">
-        aloha
+        <h3 onclick="alert('hhh');">Create Playlist</h3>
     </div>
 
     #{form @Application.upload(audio), enctype:'multipart/form-data', method:'POST'}
