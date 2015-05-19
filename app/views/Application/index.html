@@ -160,7 +160,6 @@
     }
 
 
-
 </script>
 
 <audio id="music" preload="true">
@@ -183,7 +182,7 @@
         <div id="pButton" class="playlist" onclick="viewRouter.routeTo('playlists')"></div>
     </div>
     <div class="right-top-player">
-        <div id="pButton" class="profile"></div>
+        <div id="pButton" class="profile" onclick="viewRouter.routeTo('userProfile')"></div>
     </div>
 </div>
 
@@ -198,11 +197,14 @@
         <h3 onclick="alert('hhh');">Create Playlist</h3>
     </div>
 
-    #{form @Application.upload(audio), enctype:'multipart/form-data', method:'POST'}
-        <input type="file" name="audioFiles" multiple="">
-        <input type="submit" value="Submit">
-    #{/form}
+    <div id="userProfile" style="display: none;">
+        #{form @Application.upload(audio), enctype:'multipart/form-data', method:'POST'}
+            <input type="file" name="audioFiles" multiple="">
+            <input type="submit" value="Submit">
+        #{/form}
 
-    <a href="@{Application.logout()}">Logout</a>
+        <a href="@{Application.logout()}">Logout</a>
+    </div>
+
 </div>
 

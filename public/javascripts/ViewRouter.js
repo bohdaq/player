@@ -9,6 +9,7 @@ ViewRouter.prototype.routeTo = function(idOfElement) {
 };
 ViewRouter.prototype.showView = function(idOfElement){
     document.getElementById(idOfElement).style.display = "block";
+    ViewRouter.previousViewId = idOfElement;
     console.log("Shown " + idOfElement);
 }
 ViewRouter.prototype.hideView = function(idOfElement){
