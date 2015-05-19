@@ -4,25 +4,19 @@
     jQuery( document ).ready(function( $ ) {
         $( "#doLogin" ).click(function(event) {
             event.preventDefault();
-            $.post( "/application/login", $( "#loginForm" ).serialize())
-                    .done(function( data ) {
-                        if(data.token){
-                            setCookie('token', data.token);
-                            window.location.replace('/');
-                        }
-                    });
+
+            var url = "/application/login";
+            var data = $( "#loginForm" ).serialize();
+            var doneCallback = function( data ) {
+                if(data.token){
+                    setCookie('token', data.token);
+                    window.location.replace('/');
+                }
+            };
+
+            apiCaller.loginUser(url, data, doneCallback);
         });
     });
-    function setCookie(key, value) {
-        var expires = new Date();
-        expires.setTime(expires.getTime() + (1 * 24 * 60 * 60 * 1000));
-        document.cookie = key + '=' + value + ';expires=' + expires.toUTCString();
-    }
-
-    function getCookie(key) {
-        var keyValue = document.cookie.match('(^|;) ?' + key + '=([^;]*)(;|$)');
-        return keyValue ? keyValue[2] : null;
-    }
 
 </script>
 <div class="large-3 large-centered columns">

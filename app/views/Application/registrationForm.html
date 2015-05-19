@@ -4,29 +4,21 @@
     jQuery( document ).ready(function( $ ) {
         $( "#doRegister" ).click(function(event) {
             event.preventDefault();
-            $.post( "/application/register", $( "#registerForm" ).serialize())
-                    .done(function( data ) {
-                        if(data.token){
-                            setCookie('token', data.token);
-                            window.location.replace('/');
-                        } else if (data.status == "Password missmatch" || data.status == "Invalid email") {
-                            alert(data.status);
-                        }
-                    });
+
+            var url = "/application/register";
+            var data = $( "#registerForm" ).serialize();
+            var doneCallback = function( data ) {
+                if(data.token){
+                    setCookie('token', data.token);
+                    window.location.replace('/');
+                } else if (data.status == "Password missmatch" || data.status == "Invalid email") {
+                    alert(data.status);
+                }
+            };
+
+            apiCaller.registerUser(url, data, doneCallback);
         });
     });
-
-    function setCookie(key, value) {
-        var expires = new Date();
-        expires.setTime(expires.getTime() + (1 * 24 * 60 * 60 * 1000));
-        document.cookie = key + '=' + value + ';expires=' + expires.toUTCString();
-    }
-
-    function getCookie(key) {
-        var keyValue = document.cookie.match('(^|;) ?' + key + '=([^;]*)(;|$)');
-        return keyValue ? keyValue[2] : null;
-    }
-
 
 </script>
 
