@@ -10,6 +10,8 @@
 
     var highlight = "highlight";
     $( document ).ready(function() {
+        window.viewRouter = new ViewRouter();
+
         $('.audioTrack').click(function(){
             console.log("click@")
             $('.highlight').removeClass('highlight');
@@ -155,6 +157,8 @@
         }
     }
 
+
+
 </script>
 
 <audio id="music" preload="true">
@@ -174,22 +178,29 @@
         </div>
     </div>
     <div class="right-top-player">
-        <div id="pButton" class="playlist" onclick="showPlaylists()"></div>
+        <div id="pButton" class="playlist" onclick="viewRouter.routeTo('playlists')"></div>
     </div>
     <div class="right-top-player">
         <div id="pButton" class="profile"></div>
     </div>
 </div>
 
-<ul id="listOfAudios">
-#{list items:audios, as:'audio'}
-    <li><div id="${audio.id}" class="audioTrack box2 truncate">#{if audio.title != null }${audio.artist} – ${audio.title}#{/if}#{else}${audio.name}#{/else}</div><div onclick="removeAudio();" class="box2 box1">×</div></li>
-#{/list}
-</ul>
+<div class="viewContainer">
+    <ul id="listOfAudios" style="display: none">
+        #{list items:audios, as:'audio'}
+        <li><div id="${audio.id}" class="audioTrack box2 truncate">#{if audio.title != null }${audio.artist} – ${audio.title}#{/if}#{else}${audio.name}#{/else}</div><div onclick="removeAudio();" class="box2 box1">×</div></li>
+        #{/list}
+    </ul>
 
-#{form @Application.upload(audio), enctype:'multipart/form-data', method:'POST'}
-    <input type="file" name="audioFiles" multiple="">
-    <input type="submit" value="Submit">
-#{/form}
+    <div id="playlists" style="display: none">
+        aloha
+    </div>
 
-<a href="@{Application.logout()}">Logout</a>
+    #{form @Application.upload(audio), enctype:'multipart/form-data', method:'POST'}
+        <input type="file" name="audioFiles" multiple="">
+        <input type="submit" value="Submit">
+    #{/form}
+
+    <a href="@{Application.logout()}">Logout</a>
+</div>
+
