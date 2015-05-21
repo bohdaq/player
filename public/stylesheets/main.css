@@ -67,6 +67,9 @@ li {
     float:left;
     outline:none;
 }
+.activeTopButton{
+    background-color: grey !important;
+}
 
 .play{background: url('/public/images/play.png') ;}
 .shuffle{background: url('/public/images/shuffle.png') ;}

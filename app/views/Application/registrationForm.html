@@ -5,7 +5,6 @@
         $( "#doRegister" ).click(function(event) {
             event.preventDefault();
 
-            var url = "/application/register";
             var data = $( "#registerForm" ).serialize();
             var doneCallback = function( data ) {
                 if(data.token){
@@ -16,7 +15,7 @@
                 }
             };
 
-            apiCaller.registerUser(url, data, doneCallback);
+            apiCaller.registerUser(data, doneCallback);
         });
     });
 

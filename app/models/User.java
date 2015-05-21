@@ -18,4 +18,7 @@ public class User extends Model {
 
     @OneToMany
     public List<Audio> audios;
+
+    @OneToMany
+    public List<Playlist> playlists;
 }

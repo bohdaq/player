@@ -7,6 +7,7 @@ GET     /                                     Application.index
 GET     /audio/{fileId}                       Application.downloadFile
 POST    /upload                               Application.upload
 POST    /audio/remove/{audioId}               Application.remove
+POST    /createPlaylist/{name}                Application.createPlaylist
 
 # Ignore favicon requests
 GET     /favicon.ico                            404

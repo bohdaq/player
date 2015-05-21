@@ -79,14 +79,13 @@
         var audioIdToRemove = event.target.parentElement.firstChild.id;
         var elemToDelete = event.target.parentElement;
 
-        var url = "/audio/remove/" + audioIdToRemove;
         var doneCallback = function(data){
             if(data.status == "Deleted"){
                 elemToDelete.remove();
             }
         }
 
-        apiCaller.deleteAudio(url, doneCallback);
+        apiCaller.deleteAudio(audioIdToRemove, doneCallback);
     }
     function shuffle(){
         var ul = document.querySelector('ul');
@@ -161,6 +160,18 @@
         }
     }
 
+    function createPlaylist(){
+        var name  = document.getElementById('playlistName').value;
+        var callback = function(){
+            alert('done')
+            var c = document.getElementById("playlistContainer");
+            var e = document.createElement("li");
+            e.innerHTML = name;
+            c.appendChild(e);
+        }
+        apiCaller.createPlaylist(name, callback);
+    }
+
 
 </script>
 
@@ -170,10 +181,10 @@
 
 <div id="audioplayer" class="contain-player">
     <div class="left-top-player">
-        <div id="pButton" class="play" onclick="play()"></div>
+        <div id="pButton" class="play topBtn" onclick="play()"></div>
     </div>
     <div class="left-top-player">
-        <div id="pButton" class="shuffle" onclick="shuffle()"></div>
+        <div id="pButton" class="shuffle topBtn" onclick="shuffle()"></div>
     </div>
     <div class="middle-top-player">
         <div id="timeline">
@@ -181,22 +192,53 @@
         </div>
     </div>
     <div class="right-top-player">
-        <div id="pButton" class="playlist" onclick="viewRouter.routeTo('playlists')"></div>
+        <div id="pButton" class="playlist topBtn" onclick="viewRouter.routeTo('playlists')"></div>
     </div>
     <div class="right-top-player">
-        <div id="pButton" class="profile" onclick="viewRouter.routeTo('userProfile')"></div>
+        <div id="pButton" class="profile topBtn" onclick="viewRouter.routeTo('userProfile')"></div>
     </div>
 </div>
 
 <div class="viewContainer">
     <ul id="listOfAudios" style="display: none">
+        *{<div class="row">}*
+            *{<div class="large-12 columns">}*
+                *{<div class="row collapse prefix-round">}*
+                    *{<div class="small-1 columns">}*
+                        *{<a href="#" class="button prefix">►</a>}*
+                    *{</div>}*
+                    *{<div class="small-9 columns">}*
+                        *{<input disabled="disabled" type="text" placeholder="ДахаБраха – Весна">}*
+                    *{</div>}*
+                    *{<div class="small-1 columns">}*
+                        *{<a href="#" class="button secondary prefix">+</a>}*
+                    *{</div>}*
+                    *{<div class="small-1 columns">}*
+                        *{<a href="#" class="button prefix">×</a>}*
+                    *{</div>}*
+                *{</div>}*
+            *{</div>}*
+        *{</div>}*
         #{list items:audios, as:'audio'}
         <li><div id="${audio.id}" class="audioTrack box2 truncate">#{if audio.title != null }${audio.artist} – ${audio.title}#{/if}#{else}${audio.name}#{/else}</div><div onclick="removeAudio();" class="box2 box1">×</div></li>
         #{/list}
     </ul>
 
     <div id="playlists" style="display: none">
-        <h3 onclick="alert('hhh');">Create Playlist</h3>
+        <div class="row collapse">
+            <h3>Create Playlist</h3>
+            <div class="small-10 columns">
+                <input id="playlistName" type="text" placeholder="Playlist Name">
+            </div>
+            <div class="small-2 columns">
+                <a class="button postfix" onclick="createPlaylist()">Create</a>
+            </div>
+        </div>
+        <div class="row collapse" id="playlistContainer">
+            #{list items:playlists, as:'playlist'}
+                <li id="${playlist.id}">${playlist.name}</li>
+            #{/list}
+        </div>
     </div>
 
     <div id="userProfile" style="display: none;">

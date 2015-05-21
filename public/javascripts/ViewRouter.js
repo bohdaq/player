@@ -3,6 +3,18 @@ var ViewRouter = function() {
     this.showView(ViewRouter.previousViewId);
 };
 ViewRouter.prototype.routeTo = function(idOfElement) {
+    //this if responsible for showing default view - "listOfAudios"
+    if($(event.target).hasClass('activeTopButton')){
+        $(event.target).removeClass('activeTopButton');
+
+        this.hideView(ViewRouter.previousViewId);
+        this.showView("listOfAudios");
+        window.history.pushState("listOfAudios", "listOfAudios", "/#");
+        return;
+    }
+    $(".topBtn").removeClass('activeTopButton');
+    $(event.target).addClass('activeTopButton');
+
     this.hideView(ViewRouter.previousViewId);
     this.showView(idOfElement);
     window.history.pushState(idOfElement, idOfElement, "/#" + idOfElement);

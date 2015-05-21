@@ -4,6 +4,7 @@ import com.mpatric.mp3agic.ID3v1;
 import com.mpatric.mp3agic.ID3v2;
 import com.mpatric.mp3agic.Mp3File;
 import models.Audio;
+import models.Playlist;
 import models.User;
 import play.*;
 import play.db.jpa.JPABase;
@@ -81,7 +82,18 @@ public class Application extends Controller {
 
         User user = User.find("byToken", userLoggedInCookie.value).first();
         List<Audio> audios = Audio.find("byUser", user).fetch();
-        render(audios);
+        List<Playlist> playlists = Playlist.find("byUser", user).fetch();
+        render(audios, playlists);
+    }
+
+    public static void createPlaylist(String name) {
+        Http.Cookie userLoggedInCookie = request.cookies.get("token");
+        User user = User.find("byToken", userLoggedInCookie.value).first();
+
+        Playlist playlist = new Playlist(user, name);
+        playlist.save();
+
+        renderJSON("{ \"status\": \"Playlist created\"}");
     }
 
     public static void logout() {
@@ -147,6 +159,7 @@ public class Application extends Controller {
                     file.close();
                 }
             }
+
             audioEntity.save();
         }
         index();

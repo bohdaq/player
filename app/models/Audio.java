@@ -3,7 +3,9 @@ package models;
 import play.db.jpa.Model;
 
 import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import java.util.List;
 
 @Entity
 public class Audio extends Model {
@@ -21,6 +23,9 @@ public class Audio extends Model {
     public boolean hasId3v1Tag;
     public boolean hasId3v2Tag;
     public boolean hasCustomTag;
+
+    @ManyToMany
+    public List<Playlist> playlists;
 
 
     public Audio(String name){
