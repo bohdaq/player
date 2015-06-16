@@ -40,13 +40,13 @@ public class Application extends Controller {
         }
     }
 
-    public static void register(String email, String password, String xpassword){
+    public static void register(String email, String username, String password, String xpassword){
       //  ^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$
 
         if(email.contains("@") && email.contains(".")) {
 
             if(password.equals(xpassword)){
-                User user = new User(email, password);
+                User user = new User(email, username, password);
                 user.token = System.currentTimeMillis() + email;
                 user.save();
                 response.setCookie("token", user.token);
