@@ -9,6 +9,9 @@ POST    /upload                               Application.upload
 POST    /audio/remove/{audioId}               Application.remove
 POST    /createPlaylist/{name}                Application.createPlaylist
 
+GET     /login                                Application.loginForm
+GET     /register                             Application.registrationForm
+
 # Ignore favicon requests
 GET     /favicon.ico                            404
 
