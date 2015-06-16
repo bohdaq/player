@@ -4,7 +4,7 @@
 
 # Home page
 GET     /                                     Application.index
-GET     /audio/{fileId}                       Application.downloadFile
+GET     /audio/{fileId}.mp3                   Application.downloadFile
 POST    /upload                               Application.upload
 POST    /audio/remove/{audioId}               Application.remove
 POST    /createPlaylist/{name}                Application.createPlaylist
