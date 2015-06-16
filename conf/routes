@@ -10,7 +10,7 @@ POST    /audio/remove/{audioId}               Application.remove
 POST    /createPlaylist/{name}                Application.createPlaylist
 
 GET     /login                                Application.loginForm
-GET     /register                             Application.registrationForm
+GET     /signup                               Application.signupForm
 
 # Ignore favicon requests
 GET     /favicon.ico                            404

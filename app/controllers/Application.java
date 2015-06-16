@@ -23,7 +23,7 @@ public class Application extends Controller {
         render();
     }
 
-    public static void registrationForm(){
+    public static void signupForm(){
         render();
     }
 
